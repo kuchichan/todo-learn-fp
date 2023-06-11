@@ -1,0 +1,13 @@
+# emacs
+*~
+\#*\#
+.\#*
+
+# scala
+**/target/
+**/.DS_Store
+**/.bloop
+**/.bsp
+**/.vscode
+**/.metals
+/project/project/
