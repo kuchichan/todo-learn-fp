@@ -7,6 +7,7 @@ val commonSettings = Seq(
   scalacOptions -= "-Xfatal-warnings",
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-effect" % "3.4.8",
+    "org.typelevel" %% "cats-mtl" % "1.3.0",
     "org.typelevel" %% "munit-cats-effect-3" % "1.0.7"
   ),
 
