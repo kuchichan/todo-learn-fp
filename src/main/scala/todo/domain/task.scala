@@ -8,6 +8,14 @@ object task {
     case Done
     case Cancelled
   }
-  case class TaskId(value: UUID)
-  case class Task(taskId: TaskId, content: String, taskState: State)
+
+  opaque type TaskNum = Int
+    
+  object TaskNum { 
+    def apply(value: Int): TaskNum = value + 1 
+  }
+  extension(x: TaskNum) {
+    def toInt: Int = x - 1  
+  }
+  case class Task(content: String, taskState: State)
 }
