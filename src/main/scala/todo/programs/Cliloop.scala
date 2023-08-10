@@ -11,14 +11,22 @@ import todo.services.*
 import todo.domain.task.*
 
 object Cli {
-  def mainLoop[F[_]: MonadThrow: Console](tasks: Tasks[F]): F[Unit] =
-    val loop = for {
-      _ <- Console[F].println("Please enter your next task: ")
-      input <- Console[F].readLine
-      _ <- tasks.add(Task(input, State.Todo))
-      list <- tasks.getAll
-      _ <- Console[F].println(s"Your current tasks: ${list}")
-    } yield ()
+  val greeting = """ 
+  | Todo App (Once again...)   
+  |=========================
+  | press 'h' for help or 'q' to quit
+  """.stripMargin
 
-    loop.foreverM
+  def mainLoop[F[_]: MonadThrow: Console: CommandParser](tasks: Tasks[F]): F[Unit] =
+    val loop = for {
+      _ <- Console[F].println("Please enter command: ")
+      input <- Console[F].readLine
+      command <- CommandParser[F].parseCommand(input)
+      _ <- Console[F].println(s"${command}")
+    } yield ()
+    
+    for {
+      _ <- Console[F].println(greeting)   
+      _ <- loop.foreverM
+    } yield ()
 }
