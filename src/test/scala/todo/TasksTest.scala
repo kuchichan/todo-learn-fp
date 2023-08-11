@@ -1,11 +1,9 @@
-import todo.services.*
-
-import todo.domain.*
-
-import munit.CatsEffectSuite
 import cats.effect.IO
-import cats.syntax.functor.*
 import cats.syntax.flatMap.*
+import cats.syntax.functor.*
+import munit.CatsEffectSuite
+import todo.domain.*
+import todo.services.*
 
 class TasksTest extends CatsEffectSuite {
   val tasks    = Tasks.instance[IO]

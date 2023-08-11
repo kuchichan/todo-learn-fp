@@ -1,15 +1,14 @@
 package todo.programs
 
+import cats.MonadThrow
 import cats.effect.implicits.*
-import cats.effect.IO
-import cats.effect.IOApp
 import cats.effect.std.Console
+import cats.effect.{IO, IOApp}
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
-import cats.MonadThrow
-import todo.services.*
-import todo.domain.task.*
 import todo.domain.command.*
+import todo.domain.task.*
+import todo.services.*
 
 object Cli {
   val prompt = ">>> "

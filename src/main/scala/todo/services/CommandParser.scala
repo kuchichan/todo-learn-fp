@@ -1,7 +1,7 @@
 package todo.services
 
-import todo.domain.command.*
 import cats.MonadThrow
+import todo.domain.command.*
 
 trait CommandParser[F[_]] {
   def parseCommand(rawCommand: String): F[Command]

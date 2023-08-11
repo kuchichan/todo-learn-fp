@@ -1,15 +1,11 @@
+import cats.MonadThrow
 import cats.effect.implicits.*
-
-import cats.effect.IO
-import cats.effect.IOApp
-import cats.effect.std.Console
+import cats.effect.std.{Console, Supervisor}
+import cats.effect.{IO, IOApp}
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
-import cats.MonadThrow
-import todo.services.Tasks
 import todo.programs.*
-import cats.effect.std.Supervisor
-import todo.services.CommandParser
+import todo.services.{CommandParser, Tasks}
 
 object Main extends IOApp.Simple {
 

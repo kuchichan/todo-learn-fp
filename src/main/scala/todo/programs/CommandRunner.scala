@@ -1,11 +1,10 @@
 package todo.programs
 
 import cats.Monad
-import cats.syntax.all.*
 import cats.effect.std.Console
-
-import todo.services.Tasks
+import cats.syntax.all.*
 import todo.domain.command.*
+import todo.services.Tasks
 
 class CommandRunner[F[_]: Console: Monad](tasks: Tasks[F]) {
 

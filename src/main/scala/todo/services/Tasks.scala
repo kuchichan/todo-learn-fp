@@ -1,12 +1,11 @@
 package todo.services
 
-import todo.domain.task.*
-
+import cats.MonadThrow
+import cats.effect.kernel.Ref
 import cats.implicits.*
 import cats.instances.uuid
 import cats.syntax.*
-import cats.MonadThrow
-import cats.effect.kernel.Ref
+import todo.domain.task.*
 
 trait Tasks[F[_]] {
   def add(task: Task): F[TaskNum]
