@@ -12,9 +12,12 @@ import cats.effect.std.Supervisor
 import todo.services.CommandParser
 
 object Main extends IOApp.Simple {
-  def run: IO[Unit] = for {
+
+  def run: IO[Unit] =
+    for {
       state <- Tasks.instance[IO]
-      _ <- Cli.greet[IO]
-      _ <- Cli.mainLoop(CommandParser.instance[IO], CommandRunner(state))
+      _     <- Cli.greet[IO]
+      _     <- Cli.mainLoop(CommandParser.instance[IO], CommandRunner(state))
     } yield ()
+
 }

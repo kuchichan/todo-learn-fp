@@ -1,7 +1,7 @@
 package todo.domain
 
 object command {
-  type CommandResult = Either[CommandError, ValidResult] 
+  type CommandResult = Either[CommandError, ValidResult]
 
   enum Command {
     case Quit
@@ -12,9 +12,10 @@ object command {
     case RemoveTask(taskNumber: String)
   }
 
-  enum ValidResult { 
+  enum ValidResult {
     case OK
     case Terminate
   }
+
   case class CommandError(errorMsgs: List[String])
 }
