@@ -1,7 +1,6 @@
 package todo.services
 
 import todo.domain.command.* 
-import cats.effect.kernel.Sync
 import cats.MonadThrow
 
 trait CommandParser[F[_]] {
@@ -19,7 +18,7 @@ object CommandParser {
     val quitPattern = "(^q$)|(^quit$)".r
 
     new CommandParser[F] {
-      def parseCommand(rawCommand: String) = MonadThrow[F].pure(rawCommand match {
+      def parseCommand(rawCommand: String) = MonadThrow[F].pure(rawCommand.trim() match {
         case addPattern(task) => Command.AddTask(task) 
         case removePattern(number) => Command.RemoveTask(number) 
         case quitPattern(_, _) => Command.Quit
