@@ -1,4 +1,5 @@
 package todo.domain
+import cats.syntax.all.*
 
 import java.util.UUID
 
@@ -21,4 +22,9 @@ object task {
   }
 
   case class Task(content: String, taskState: State)
+
+  object Task { 
+    def fromString(content: String): Option[Task] = 
+       (!content.isBlank()).guard[Option].as(Task(content, State.Todo))
+  }
 }
