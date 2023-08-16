@@ -1,7 +1,10 @@
 ThisBuild / scalaVersion                        := "3.2.0"
 ThisBuild / versionScheme                       := Some("early-semver")
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()
+
+ThisBuild / githubWorkflowJavaVersions -= JavaSpec.temurin("8")
 ThisBuild / githubWorkflowJavaVersions += JavaSpec.temurin("17")
+
 ThisBuild / scalafixDependencies +=
   "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
