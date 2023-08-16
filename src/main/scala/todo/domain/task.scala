@@ -25,6 +25,6 @@ object task {
 
   object Task { 
     def fromString(content: String): Option[Task] = 
-       (!content.isEmpty()).guard[Option].as(Task(content, State.Todo))
+       (!content.isBlank()).guard[Option].as(Task(content, State.Todo))
   }
 }
