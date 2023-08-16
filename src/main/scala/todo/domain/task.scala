@@ -1,4 +1,5 @@
 package todo.domain
+
 import cats.syntax.all.*
 
 import java.util.UUID
@@ -11,17 +12,20 @@ object task {
     case Cancelled
   }
 
-  object State { 
-    def cycle(state: State) = state match
-      case Todo => Done 
-      case Done => Cancelled 
-      case Cancelled => Todo 
+  object State {
+
+    def cycle(state: State) =
+      state match
+        case Todo      => Done
+        case Done      => Cancelled
+        case Cancelled => Todo
+
   }
 
   opaque type TaskNum = Int
 
   object TaskNum {
-    def apply(value: Int): TaskNum = value + 1
+    def apply(value: Int): TaskNum     = value + 1
     def fromInput(value: Int): TaskNum = value
   }
 
@@ -31,8 +35,11 @@ object task {
 
   case class Task(content: String, taskState: State)
 
-  object Task { 
-    def fromString(content: String): Option[Task] = 
-       (!content.isBlank()).guard[Option].as(Task(content, State.Todo))
+  object Task {
+
+    def fromString(
+      content: String
+    ): Option[Task] = (!content.isBlank()).guard[Option].as(Task(content, State.Todo))
   }
+
 }

@@ -11,6 +11,7 @@ import todo.domain.task.Task
 import cats.MonadThrow
 import cats.data.EitherT
 import todo.domain.task.TaskNum
+import todo.domain.RenderUtils
 
 class CommandRunner[F[_]: Console: MonadThrow](tasks: Tasks[F]) {
 
@@ -24,6 +25,7 @@ class CommandRunner[F[_]: Console: MonadThrow](tasks: Tasks[F]) {
     """
   |Available Commands:
   |rm <num> - Removes a task number <num> from the list. 
+  |t <num> - Cycle through task state [DONE, TODO, CANCELLED] for task with <num>. 
   |ls OR list - List your tasks.
   |q OR quit - Exits the application.
   |h OR help - Display help (the same you are reading right now).
@@ -53,19 +55,19 @@ class CommandRunner[F[_]: Console: MonadThrow](tasks: Tasks[F]) {
   def runShow(): F[CommandResult] =
     for {
       allTasks <- tasks.getAll
-      _        <- Console[F].println(allTasks)
+      _        <- Console[F].println(RenderUtils.renderTasks(allTasks))
     } yield ValidResult.OK.asRight[CommandError]
 
   def runRemove(taskNum: String): F[CommandResult] =
     for {
       numOrError <- ensureTaskNum(taskNum)
-      result     <- ensureRemove(numOrError)
+      result     <- ensureStateCommand(numOrError, tasks.removeTask)
     } yield result
 
   def runChangeState(taskNum: String): F[CommandResult] =
     for {
       numOrError <- ensureTaskNum(taskNum)
-      result     <- ensureChangeState(numOrError)
+      result     <- ensureStateCommand(numOrError, tasks.changeTaskState)
     } yield result
 
   def runCommand(command: Command): F[CommandResult] =
@@ -91,33 +93,20 @@ class CommandRunner[F[_]: Console: MonadThrow](tasks: Tasks[F]) {
   private def ensureTaskNum(taskNum: String): F[Either[CommandError, TaskNum]] = MonadThrow[F].pure(
     taskNum
       .asRight[CommandError]
-      .ensure(CommandError("Task number should contain only digit"))(_.forall(_.isDigit))
+      .ensure(CommandError("Task number should contain only digits."))(_.forall(_.isDigit))
       .map(num => num.toInt)
-      .ensure(CommandError("Number should be positive"))(_ > 0)
+      .ensure(CommandError("Number should be positive."))(_ > 0)
       .map(TaskNum.fromInput(_))
   )
 
-  private def ensureRemove(taskNum: Either[CommandError, TaskNum]): F[CommandResult] =
+  private def ensureStateCommand(
+    taskNum: Either[CommandError, TaskNum],
+    command: (taskNum: TaskNum) => F[Unit],
+  ): F[CommandResult] =
     taskNum match {
       case Left(value) => MonadThrow[F].pure(value.asLeft[ValidResult])
       case Right(num) =>
-        tasks
-          .removeTask(num)
-          .attempt
-          .map(
-            _.fold(
-              _ => CommandError("Task not found.").asLeft[ValidResult],
-              _ => ValidResult.OK.asRight[CommandError],
-            )
-          )
-    }
-
-  private def ensureChangeState(taskNum: Either[CommandError, TaskNum]): F[CommandResult] =
-    taskNum match {
-      case Left(value) => MonadThrow[F].pure(value.asLeft[ValidResult])
-      case Right(num) =>
-        tasks
-          .changeTaskState(num)
+        command(num)
           .attempt
           .map(
             _.fold(
