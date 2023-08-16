@@ -11,10 +11,18 @@ object task {
     case Cancelled
   }
 
+  object State { 
+    def cycle(state: State) = state match
+      case Todo => Done 
+      case Done => Cancelled 
+      case Cancelled => Todo 
+  }
+
   opaque type TaskNum = Int
 
   object TaskNum {
     def apply(value: Int): TaskNum = value + 1
+    def fromInput(value: Int): TaskNum = value
   }
 
   extension (x: TaskNum) {

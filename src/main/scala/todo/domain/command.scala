@@ -8,11 +8,11 @@ object command {
   enum Command {
     case Quit
     case Help
-    case AddHelp 
     case ShowTasks
     case UnknownTask
     case AddTask(taskText: String)
     case RemoveTask(taskNumber: String)
+    case ChangeState(taskNumber: String)
   }
 
   enum ValidResult {

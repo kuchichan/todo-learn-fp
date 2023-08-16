@@ -6,10 +6,13 @@ import cats.implicits.*
 import cats.instances.uuid
 import cats.syntax.*
 import todo.domain.task.*
+import todo.services.Utils.*
 
 trait Tasks[F[_]] {
   def add(task: Task): F[TaskNum]
   def getAll: F[Vector[Task]]
+  def changeTaskState(taskNum: TaskNum): F[Unit]
+  def removeTask(taskNum: TaskNum): F[Unit]
 }
 
 object Tasks {
@@ -26,6 +29,21 @@ object Tasks {
           _     <- s.update(v => v :+ task)
           state <- s.get
         } yield TaskNum.apply(state.indexOf(task))
+
+      def removeTask(taskNum: TaskNum): F[Unit] =
+        for {
+          _ <- s.update(v => Utils.removeFromVectorAtIndex(v, taskNum.toInt))
+        } yield ()
+
+      def changeTaskState(taskNum: TaskNum): F[Unit] = 
+        for {
+          tasks <- s.get
+          task <- MonadThrow[F]
+            .fromOption(tasks.get(taskNum.toInt), new UnsupportedOperationException)
+          _ <- s.update(v =>
+            v.updated(taskNum.toInt, task.copy(taskState = State.cycle(task.taskState)))
+          )
+        } yield ()
 
       def getAll: F[Vector[Task]] = s.get
     }
