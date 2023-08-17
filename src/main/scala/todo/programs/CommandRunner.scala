@@ -1,17 +1,15 @@
 package todo.programs
 
-import cats.Monad
-
 import cats.effect.std.Console
-import cats.syntax.all.*
 import cats.implicits.*
-import todo.domain.command.*
-import todo.services.Tasks
-import todo.domain.task.Task
+import cats.syntax.all.*
+import cats.Monad
 import cats.MonadThrow
-import cats.data.EitherT
+import todo.domain.command.*
+import todo.domain.task.Task
 import todo.domain.task.TaskNum
-import todo.domain.RenderUtils
+import todo.services.RenderUtils
+import todo.services.Tasks
 
 class CommandRunner[F[_]: Console: MonadThrow](tasks: Tasks[F]) {
 

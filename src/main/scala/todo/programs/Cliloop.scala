@@ -25,7 +25,7 @@ object Cli {
 
   private def processResult[F[_]: Console: MonadThrow](result: CommandResult) =
     result match
-      case Right(_)     => MonadThrow[F].unit   
+      case Right(_)    => MonadThrow[F].unit
       case Left(error) => Console[F].println(error.errorMsg)
 
   def mainLoop[F[_]: MonadThrow: Console](

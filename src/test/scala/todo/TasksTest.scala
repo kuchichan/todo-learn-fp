@@ -1,4 +1,5 @@
 import cats.effect.IO
+
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import munit.CatsEffectSuite

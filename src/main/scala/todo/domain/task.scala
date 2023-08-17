@@ -2,8 +2,6 @@ package todo.domain
 
 import cats.syntax.all.*
 
-import java.util.UUID
-
 object task {
 
   enum State {
@@ -40,6 +38,7 @@ object task {
     def fromString(
       content: String
     ): Option[Task] = (!content.isBlank()).guard[Option].as(Task(content, State.Todo))
+
   }
 
 }

@@ -35,7 +35,7 @@ object Tasks {
           _ <- s.update(v => Utils.removeFromVectorAtIndex(v, taskNum.toInt))
         } yield ()
 
-      def changeTaskState(taskNum: TaskNum): F[Unit] = 
+      def changeTaskState(taskNum: TaskNum): F[Unit] =
         for {
           tasks <- s.get
           task <- MonadThrow[F]

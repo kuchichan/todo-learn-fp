@@ -1,10 +1,10 @@
-package todo.domain
+package todo.services
 
 import cats.Show
 import cats.syntax.all.*
-import todo.domain.task.TaskNum
-import todo.domain.task.Task
 import todo.domain.task.State
+import todo.domain.task.Task
+import todo.domain.task.TaskNum
 
 object RenderUtils {
   val ordHeader              = "No."
