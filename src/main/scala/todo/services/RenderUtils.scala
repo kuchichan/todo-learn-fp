@@ -5,41 +5,54 @@ import cats.syntax.all.*
 import todo.domain.task.State
 import todo.domain.task.Task
 import todo.domain.task.TaskNum
+import scala.io.AnsiColor.*
 
 object RenderUtils {
+  val ansiEscapeChars        = "\\u001B\\[\\d{1,2}m"
   val ordHeader              = "No."
   val tasksHeader            = "Tasks"
   val stateHeader            = "State"
   val spaceDelimitersPerCell = 2
 
   given Show[TaskNum] = Show.show(tn => s"${tn}.")
-  given Show[State]   = Show.show(st => st.toString().toUpperCase())
 
-  extension (s: String) def ppad(padding: Int): String = s.padTo(padding, ' ')
+  given Show[State] = Show.show { st =>
+    val asString = s"${BOLD}${st.toString().toUpperCase()}"
+    st match
+      case State.Todo      => s"${BLUE}${asString}${RESET}"
+      case State.Done      => s"${GREEN}${asString}${RESET}"
+      case State.Cancelled => s"${RED}${asString}${RESET}"
+
+  }
+
+  extension (s: String)
+
+    def ppad(padding: Int): String =
+      val difference = s.length() - s.replaceAll(ansiEscapeChars, "").length()
+      s.padTo(padding + difference, ' ')
 
   def renderTasks(tasks: Vector[Task]) =
-    val max_content_pad = get_max_pad(tasks.map(_.content) :+ tasksHeader)
-    val max_state_pad   = get_max_pad(tasks.map(_.taskState.show) :+ tasksHeader)
-    val max_ord_num_pad = get_max_pad(Vector(ordHeader) :+ tasks.length.toString)
-    val total           = max_ord_num_pad + max_ord_num_pad + max_state_pad
+    val maxContentPad = getMaxPad(tasks.map(_.content) :+ tasksHeader)
+    val maxStatePad   = getMaxPad(tasks.map(_.taskState.toString()) :+ stateHeader)
+    val maxOrdNumPad  = getMaxPad(Vector(ordHeader) :+ tasks.length.toString)
+    val total         = maxOrdNumPad + maxContentPad + maxStatePad
 
     val heading =
-      s"| ${ordHeader.ppad(max_ord_num_pad)} | ${tasksHeader.ppad(max_content_pad)} | ${stateHeader
-        .ppad(max_state_pad)} |"
+      s"| ${ordHeader.ppad(maxOrdNumPad)} | ${tasksHeader.ppad(maxContentPad)} | ${stateHeader
+        .ppad(maxStatePad)} |"
     val bar =
-      "+" + "-".repeat(max_ord_num_pad + spaceDelimitersPerCell) + "+" + "-".repeat(
-        max_content_pad + spaceDelimitersPerCell
-      ) + "+" + "-".repeat(max_state_pad + spaceDelimitersPerCell) + "+"
+      "+" + "-".repeat(maxOrdNumPad + spaceDelimitersPerCell) + "+" + "-".repeat(
+        maxContentPad + spaceDelimitersPerCell
+      ) + "+" + "-".repeat(maxStatePad + spaceDelimitersPerCell) + "+"
 
     tasks
       .zipWithIndex
       .map((t, i) =>
-        s"| ${TaskNum(i).show.ppad(max_ord_num_pad)} | ${t
+        s"| ${TaskNum(i).show.ppad(maxOrdNumPad)} | ${t
           .content
-          .ppad(max_content_pad)} | ${t.taskState.show.ppad(max_state_pad)} |"
+          .ppad(maxContentPad)} | ${t.taskState.show.ppad(maxStatePad)} |"
       )
       .mkString(s"$bar\n$heading\n$bar\n", "\n", s"\n$bar")
 
-  private def get_max_pad(vec: Vector[String]): Int = vec.map(_.length()).max
-
+  private def getMaxPad(vec: Vector[String]): Int = vec.map(_.length()).max
 }

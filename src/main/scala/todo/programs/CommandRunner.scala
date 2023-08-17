@@ -3,13 +3,10 @@ package todo.programs
 import cats.effect.std.Console
 import cats.implicits.*
 import cats.syntax.all.*
-import cats.Monad
 import cats.MonadThrow
 import todo.domain.command.*
-import todo.domain.task.Task
-import todo.domain.task.TaskNum
-import todo.services.RenderUtils
-import todo.services.Tasks
+import todo.domain.task.{Task, TaskNum}
+import todo.services.{ RenderUtils, Tasks}
 
 class CommandRunner[F[_]: Console: MonadThrow](tasks: Tasks[F]) {
 

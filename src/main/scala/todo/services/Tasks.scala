@@ -3,8 +3,7 @@ package todo.services
 import cats.MonadThrow
 import cats.effect.kernel.Ref
 import cats.implicits.*
-import cats.instances.uuid
-import cats.syntax.*
+import cats.syntax.all.*
 import todo.domain.task.*
 import todo.services.Utils.*
 

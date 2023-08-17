@@ -1,6 +1,6 @@
 package todo.services
 
-import cats.MonadThrow
+import cats.Monad
 import todo.domain.command.*
 
 trait CommandParser[F[_]] {
@@ -10,7 +10,7 @@ trait CommandParser[F[_]] {
 object CommandParser {
   def apply[F[_]](using t: CommandParser[F]) = summon
 
-  def instance[F[_]: MonadThrow]: CommandParser[F] =
+  def instance[F[_]: Monad]: CommandParser[F] =
     val addPattern         = """^add(\W*)(.*)""".r
     val removePattern      = "^rm (.*)".r
     val changeStatePattern = "^t (.*)".r
@@ -19,7 +19,7 @@ object CommandParser {
     val quitPattern        = """(^q\W*)$|(^quit\W*)$""".r
 
     new CommandParser[F] {
-      def parseCommand(rawCommand: String) = MonadThrow[F].pure(rawCommand match {
+      def parseCommand(rawCommand: String) = Monad[F].pure(rawCommand match {
         case addPattern("", "")         => Command.AddTask("")
         case addPattern("", _)          => Command.UnknownTask
         case addPattern(_, task)        => Command.AddTask(task)

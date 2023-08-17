@@ -1,6 +1,6 @@
 package todo.programs
 
-import cats.MonadThrow
+import cats.Monad
 import cats.effect.implicits.*
 import cats.effect.std.Console
 import cats.effect.IO
@@ -23,12 +23,12 @@ object Cli {
 
   def greet[F[_]: Console] = Console[F].println(greeting)
 
-  private def processResult[F[_]: Console: MonadThrow](result: CommandResult) =
+  private def processResult[F[_]: Console: Monad](result: CommandResult) =
     result match
-      case Right(_)    => MonadThrow[F].unit
+      case Right(_)    => Monad[F].unit
       case Left(error) => Console[F].println(error.errorMsg)
 
-  def mainLoop[F[_]: MonadThrow: Console](
+  def mainLoop[F[_]: Monad: Console](
     parser: CommandParser[F],
     runner: CommandRunner[F],
   ): F[Unit] =
@@ -41,6 +41,6 @@ object Cli {
         _       <- processResult(result)
       } yield result
 
-    MonadThrow[F].iterateUntil(loop)(result => result == Right(ValidResult.Terminate)).void
+    Monad[F].iterateUntil(loop)(result => result == Right(ValidResult.Terminate)).void
 
 }

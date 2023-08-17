@@ -1,13 +1,10 @@
-import cats.MonadThrow
-
 import cats.effect.implicits.*
 import cats.effect.IO
 import cats.effect.IOApp
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import todo.programs.*
-import todo.services.CommandParser
-import todo.services.Tasks
+import todo.services.*
 
 object Main extends IOApp.Simple {
 
