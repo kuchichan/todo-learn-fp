@@ -55,5 +55,5 @@ h OR help - Display help (the same you are reading right now).
 Goodbye!
 ```
 
-Application is heavily inspired by this [Todo App](https://github.com/alvinj/FunctionalToDoListWithCats), which gave me some
+The application is heavily inspired by this [Todo App](https://github.com/alvinj/FunctionalToDoListWithCats), which gave me some
 kind of courage and ignition to start my own (small) things in typelevel and scala stack. Thanks for that.
