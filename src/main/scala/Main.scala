@@ -1,4 +1,5 @@
 import cats.effect.implicits.*
+
 import cats.effect.IO
 import cats.effect.IOApp
 import cats.syntax.flatMap.*

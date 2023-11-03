@@ -22,7 +22,6 @@ class TasksTest extends CatsEffectSuite {
   }
 
   test("Tasks add task returns list with one task") {
-
     for {
       t    <- tasks
       _    <- t.add(testTask)
